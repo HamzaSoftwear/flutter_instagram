@@ -102,7 +102,17 @@ class _ProfileState extends State<Profile> {
                       ),
                       child: CircleAvatar(
                         radius: 40,
-                        backgroundImage: NetworkImage(userDate["profileImg"] ?? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face"),
+                        backgroundImage: (userDate["profileImg"] != null && userDate["profileImg"].isNotEmpty)
+                            ? NetworkImage(userDate["profileImg"])
+                            : null,
+                        backgroundColor: Colors.grey[300],
+                        child: (userDate["profileImg"] == null || userDate["profileImg"].isEmpty)
+                            ? Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.grey[600],
+                              )
+                            : null,
                       ),
                     ),
                     Expanded(

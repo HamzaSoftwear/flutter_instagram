@@ -143,7 +143,7 @@ class _RegisterState extends State<Register> {
         showSnackBar(context, "Creating account...");
         
         // Use default image for now
-        String defaultImageUrl = "https://via.placeholder.com/150";
+        String defaultImageUrl = "";
         
         await AuthMethods().register(
             emailll: emailController.text,
@@ -151,8 +151,8 @@ class _RegisterState extends State<Register> {
             context: context,
             titleee: titleController.text,
             usernameee: usernameController.text,
-            imgName: "default.jpg",
-            imgPath: Uint8List.fromList([0])).timeout(
+            imgName: imgName,
+            imgPath: imgPath).timeout(
           Duration(seconds: 15),
           onTimeout: () {
             throw Exception("Registration timed out. Please try again.");

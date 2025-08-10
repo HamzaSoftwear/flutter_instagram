@@ -44,7 +44,7 @@ class UserDate {
       email: snapshot["email"] ?? "",
       title: snapshot["title"] ?? "",
       username: snapshot["username"] ?? "Unknown User",
-      profileImg: snapshot["profileImg"] ?? "https://via.placeholder.com/150",
+      profileImg: snapshot["profileImg"] ?? "",
       uid: snapshot["uid"] ?? "",
       followers: snapshot["followers"] ?? [],
       following: snapshot["following"] ?? [],

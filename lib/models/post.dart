@@ -41,10 +41,10 @@ class PostData {
   static convertSnap2Model(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return PostData(
-      profileImg: snapshot["profileImg"] ?? "https://via.placeholder.com/150",
+      profileImg: snapshot["profileImg"] ?? "",
       username: snapshot["username"] ?? "Unknown User",
       description: snapshot["description"] ?? "",
-      imgPost: snapshot["imgPost"] ?? "https://via.placeholder.com/400x300",
+      imgPost: snapshot["imgPost"] ?? "",
       uid: snapshot["uid"] ?? "",
       postId: snapshot["postId"] ?? "",
       datePublished: snapshot["datePublished"] ?? DateTime.now(),

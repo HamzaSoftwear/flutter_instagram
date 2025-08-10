@@ -76,9 +76,17 @@ class _SearchState extends State<Search> {
                       title: Text(snapshot.data!.docs[index]["username"] ?? "Unknown User"),
                       leading: CircleAvatar(
                         radius: 33,
-                        backgroundImage: NetworkImage(
-                            // "https://i.pinimg.com/564x/94/df/a7/94dfa775f1bad7d81aa9898323f6f359.jpg"
-                            snapshot.data!.docs[index]["profileImg"] ?? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face"),
+                        backgroundImage: (snapshot.data!.docs[index]["profileImg"] != null && snapshot.data!.docs[index]["profileImg"].isNotEmpty)
+                            ? NetworkImage(snapshot.data!.docs[index]["profileImg"])
+                            : null,
+                        backgroundColor: Colors.grey[300],
+                        child: (snapshot.data!.docs[index]["profileImg"] == null || snapshot.data!.docs[index]["profileImg"].isEmpty)
+                            ? Icon(
+                                Icons.person,
+                                size: 33,
+                                color: Colors.grey[600],
+                              )
+                            : null,
                       ),
                     );
                   });

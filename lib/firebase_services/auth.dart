@@ -25,13 +25,17 @@ class AuthMethods {
         return;
       }
 
+      // Make profile image optional
       if (imgName == null || imgPath == null) {
-        showSnackBar(context, "Please select a profile image");
-        return;
+        print("No profile image selected, using default");
       }
 
       print("Starting registration for: $emailll");
-      print("Image name: $imgName, Image size: ${imgPath.length} bytes");
+      if (imgName != null && imgPath != null) {
+        print("Image name: $imgName, Image size: ${imgPath.length} bytes");
+      } else {
+        print("No image provided");
+      }
 
       // Step 1: Create Firebase Auth user
       print("Creating user account...");
@@ -45,10 +49,21 @@ class AuthMethods {
       message = "ERROR => Registered only";
 
       // Step 2: Handle image upload (optional now)
-      String urlll;
-      // Disable image upload for now due to CORS issues
-      urlll = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face";
-      print("Using default profile image");
+      String urlll = "";
+      if (imgName != null && imgPath != null) {
+        try {
+          urlll = await getImgURL(
+              imgName: imgName,
+              imgPath: imgPath,
+              folderName: 'profilePics/${credential.user!.uid}');
+          print("Profile image uploaded successfully: $urlll");
+        } catch (e) {
+          print("Failed to upload profile image: $e");
+          urlll = ""; // Use empty string if upload fails
+        }
+      } else {
+        print("Using default profile image");
+      }
 
       // Step 3: Create user document
       print("Setting up user profile...");

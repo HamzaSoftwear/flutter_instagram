@@ -139,11 +139,17 @@ class _PostDesignState extends State<PostDesign> {
                       ),
                       child: CircleAvatar(
                         radius: 33,
-                        backgroundImage: NetworkImage(
-                            // widget.snap["profileImg"],
-                            // "https://i.pinimg.com/564x/94/df/a7/94dfa775f1bad7d81aa9898323f6f359.jpg"
-                            // "https://static-ai.asianetnews.com/images/01e42s5h7kpdte5t1q9d0ygvf7/1-jpeg.jpg"
-                            widget.data["profileImg"] ?? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face"),
+                        backgroundImage: (widget.data["profileImg"] != null && widget.data["profileImg"].isNotEmpty)
+                            ? NetworkImage(widget.data["profileImg"])
+                            : null,
+                        backgroundColor: Colors.grey[300],
+                        child: (widget.data["profileImg"] == null || widget.data["profileImg"].isEmpty)
+                            ? Icon(
+                                Icons.person,
+                                size: 33,
+                                color: Colors.grey[600],
+                              )
+                            : null,
                       ),
                     ),
                     SizedBox(
@@ -170,21 +176,42 @@ class _PostDesignState extends State<PostDesign> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Image.network(
-                  // widget.snap["postUrl"],
-                  // "https://cdn1-m.alittihad.ae/store/archive/image/2021/10/22/6266a092-72dd-4a2f-82a4-d22ed9d2cc59.jpg?width=1300",
-                  widget.data["imgPost"] ?? "https://via.placeholder.com/400x300",
-                  loadingBuilder: (context, child, progress) {
-                    return progress == null
-                        ? child
-                        : SizedBox(
+                (widget.data["imgPost"] != null && widget.data["imgPost"].isNotEmpty)
+                    ? Image.network(
+                        widget.data["imgPost"],
+                        loadingBuilder: (context, child, progress) {
+                          return progress == null
+                              ? child
+                              : SizedBox(
+                                  height: MediaQuery.of(context).size.height * 0.35,
+                                  child: Center(child: CircularProgressIndicator()));
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
                             height: MediaQuery.of(context).size.height * 0.35,
-                            child: Center(child: CircularProgressIndicator()));
-                  },
-                  fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                ),
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 50,
+                              color: Colors.grey[600],
+                            ),
+                          );
+                        },
+                        fit: BoxFit.cover,
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        width: double.infinity,
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        width: double.infinity,
+                        color: Colors.grey[300],
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 50,
+                          color: Colors.grey[600],
+                        ),
+                      ),
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
                   opacity: isLikeAnimating ? 1 : 0,
