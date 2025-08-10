@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram/shared/colors.dart';
+import 'package:flutter_instagram/screens/profile_edit.dart';
+import 'package:flutter_instagram/screens/sign_in.dart';
+import 'package:flutter_instagram/shared/snackbar.dart';
 
 class Profile extends StatefulWidget {
   final String uiddd;
@@ -70,6 +73,34 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
     getData();
+  }
+
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const Login()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, "Error logging out: $e");
+    }
+  }
+
+  Future<void> _editProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfileEdit(userData: userDate),
+      ),
+    );
+    
+    // Refresh data if profile was updated
+    if (result == true) {
+      getData();
+    }
   }
 
   @override
@@ -202,7 +233,7 @@ class _ProfileState extends State<Profile> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: _editProfile,
                             icon: Icon(
                               Icons.edit,
                               color: Colors.grey,
@@ -234,7 +265,7 @@ class _ProfileState extends State<Profile> {
                             width: 15,
                           ),
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: _logout,
                             icon: Icon(
                               Icons.logout,
                               size: 24.0,
