@@ -160,10 +160,17 @@ class _AddPostState extends State<AddPost> {
                       ),
                       child: CircleAvatar(
                         radius: 33,
-                        backgroundImage: NetworkImage(allDataFromDB!.profileImg
-                            // "https://static-ai.asianetnews.com/images/01e42s5h7kpdte5t1q9d0ygvf7/1-jpeg.jpg"
-                            //
-                            ),
+                        backgroundImage: (allDataFromDB!.profileImg != null && allDataFromDB!.profileImg.isNotEmpty)
+                            ? NetworkImage(allDataFromDB!.profileImg)
+                            : null,
+                        backgroundColor: Colors.grey[300],
+                        child: (allDataFromDB!.profileImg == null || allDataFromDB!.profileImg.isEmpty)
+                            ? Icon(
+                                Icons.person,
+                                size: 33,
+                                color: Colors.grey[600],
+                              )
+                            : null,
                       ),
                     ),
                     SizedBox(

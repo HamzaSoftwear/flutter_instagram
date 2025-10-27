@@ -18,15 +18,17 @@ class FirestoreMethods {
     String message = "ERROR => Not starting the code";
 
     try {
-// ______________________________________________________________________
-
+      print("Starting post upload process...");
+      
+      // Upload image to Firebase Storage
       String urlll = await getImgURL(
           imgName: imgName,
           imgPath: imgPath,
           folderName: 'imgPosts/${FirebaseAuth.instance.currentUser!.uid}');
 
-// _______________________________________________________________________
-// firebase firestore (Database)
+      print("Image uploaded successfully: $urlll");
+
+      // Create post in Firestore
       CollectionReference posts =
           FirebaseFirestore.instance.collection('postSSS');
 
@@ -42,18 +44,18 @@ class FirestoreMethods {
           uid: FirebaseAuth.instance.currentUser!.uid,
           username: username);
 
-      message = "ERROR => erroe hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
-      posts
-          .doc(newId)
-          .set(postt.convert2Map())
-          .then((value) => print("done................"))
-          .catchError((error) => print("Failed to post: $error"));
+      print("Creating post document with ID: $newId");
+      
+      await posts.doc(newId).set(postt.convert2Map());
+      print("Post created successfully in Firestore");
 
-      message = " Posted successfully ♥ ♥";
+      message = "Posted successfully ♥ ♥";
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, "ERROR :  ${e.code} ");
+      print("Firebase Auth Error: ${e.code}");
+      showSnackBar(context, "Authentication Error: ${e.code}");
     } catch (e) {
-      print(e);
+      print("General Error: $e");
+      showSnackBar(context, "Error: $e");
     }
 
     showSnackBar(context, message);

@@ -87,12 +87,18 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                   color: Color.fromARGB(125, 78, 91, 110),
                                 ),
                                 child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      data["profilePic"] ?? "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face"
-                                      // "https://cdn1-m.zahratalkhaleej.ae/store/archive/image/2020/11/4/813126b3-4c9d-4a7b-b8d9-83f46749fa26.jpg?format=jpg&preset=w1900"
-
-                                      ),
+                                  backgroundImage: (data["profilePic"] != null && data["profilePic"].isNotEmpty)
+                                      ? NetworkImage(data["profilePic"])
+                                      : null,
+                                  backgroundColor: Colors.grey[300],
                                   radius: 26,
+                                  child: (data["profilePic"] == null || data["profilePic"].isEmpty)
+                                      ? Icon(
+                                          Icons.person,
+                                          size: 26,
+                                          color: Colors.grey[600],
+                                        )
+                                      : null,
                                 ),
                               ),
                               Column(
@@ -148,8 +154,18 @@ class _CommentsScreenState extends State<CommentsScreen> {
                           color: Color.fromARGB(125, 78, 91, 110),
                         ),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(userData!.profileImg),
+                          backgroundImage: (userData!.profileImg != null && userData!.profileImg.isNotEmpty)
+                              ? NetworkImage(userData!.profileImg)
+                              : null,
+                          backgroundColor: Colors.grey[300],
                           radius: 26,
+                          child: (userData!.profileImg == null || userData!.profileImg.isEmpty)
+                              ? Icon(
+                                  Icons.person,
+                                  size: 26,
+                                  color: Colors.grey[600],
+                                )
+                              : null,
                         ),
                       ),
                       Expanded(

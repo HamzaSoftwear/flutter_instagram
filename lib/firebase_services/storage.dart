@@ -30,38 +30,41 @@ getImgURL({
       contentType = 'image/webp';
     }
     
-    // Add metadata for better compatibility
+    print("Uploading with content type: $contentType");
+    
+    // Create upload task with metadata
     final metadata = SettableMetadata(
       contentType: contentType,
       customMetadata: {'picked-file-path': imgName},
     );
     
-    print("Uploading with content type: $contentType");
-    
-    // Try without metadata first (simpler approach)
-    UploadTask uploadTask;
-    try {
-      uploadTask = storageRef.putData(imgPath, metadata);
-    } catch (e) {
-      print("Failed with metadata, trying without: $e");
-      uploadTask = storageRef.putData(imgPath);
-    }
+    UploadTask uploadTask = storageRef.putData(imgPath, metadata);
     
     // Add progress listener for better user feedback
     uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-      double progress = snapshot.bytesTransferred / snapshot.totalBytes;
-      print("Upload progress: ${(progress * 100).toStringAsFixed(1)}%");
+      if (snapshot.totalBytes > 0) {
+        double progress = snapshot.bytesTransferred / snapshot.totalBytes;
+        print("Upload progress: ${(progress * 100).toStringAsFixed(1)}%");
+      }
     });
     
+    // Wait for upload to complete
     TaskSnapshot snap = await uploadTask;
+    print("Upload completed, bytes transferred: ${snap.bytesTransferred}");
 
-    // Get img url
+    // Get download URL
     String urll = await snap.ref.getDownloadURL();
     print("Upload successful, URL: $urll");
 
     return urll;
   } catch (e) {
     print("Error uploading image: $e");
-    throw Exception("Failed to upload image: $e");
+    if (e.toString().contains('permission-denied')) {
+      throw Exception("Permission denied. Please check your Firebase Storage rules.");
+    } else if (e.toString().contains('unauthenticated')) {
+      throw Exception("User not authenticated. Please sign in again.");
+    } else {
+      throw Exception("Failed to upload image: $e");
+    }
   }
 }
